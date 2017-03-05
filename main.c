@@ -195,20 +195,20 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
   GLuint vbo;
   GLuint shaderProgram;
 
-  const char *vertexShader = "#version 410\n"
+  char *vertexShader = "#version 410\n"
     "in vec3 pos;"
     "uniform mat4 model;"
     "out vec3 color;"
     "void main () {"
-    "    color = (pos + vec3(1.0))/2.0;"
-    "    gl_Position = model * vec4(pos, 1.0);"
-    "    gl_PointSize = 4.0;"
+    "  color = (pos + vec3(1.0))/2.0;"
+    "  gl_Position = model * vec4(pos, 1.0);"
+    "  gl_PointSize = 4.0;"
     "}";
-  const char *fragmentShader = "#version 410\n"
+  char *fragmentShader = "#version 410\n"
     "in vec3 color;"
     "out vec4 frag_color;"
     "void main () {"
-    "    frag_color = vec4(color, 1.0);"
+    "  frag_color = vec4(color, 1.0);"
     "}";
   GLuint vertShader, fragShader;
 
