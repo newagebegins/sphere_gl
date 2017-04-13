@@ -22,7 +22,6 @@ typedef char GLchar;
 #define GL_STATIC_DRAW                    0x88E4
 #define GL_VERTEX_SHADER                  0x8B31
 #define GL_FRAGMENT_SHADER                0x8B30
-#define GL_VERTEX_PROGRAM_POINT_SIZE      0x8642
 
 typedef void (APIENTRYP PFNGLGENBUFFERSPROC) (GLsizei n, GLuint *buffers);
 PFNGLGENBUFFERSPROC glGenBuffers;
@@ -83,7 +82,7 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
   wndClass.lpszClassName = "Sphere GL";
   RegisterClass(&wndClass);
 
-  int wndWidth = 1920/2;
+  int wndWidth = 800;
   int wndHeight = wndWidth;
 
   RECT crect = {0};
@@ -144,11 +143,17 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
     glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)wglGetProcAddress("glUniformMatrix4fv");
   }
 
-  glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
-  int parallelsCount = 40;
+  // Line antialiasing
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_LINE_SMOOTH);
+  glHint(GL_LINE_SMOOTH_HINT,  GL_NICEST);
+  glLineWidth(10.0f);
+
+  int parallelsCount = 20;
   int meridiansCount = parallelsCount;
   float radius = 1.0f;
   int pointsCount = parallelsCount * meridiansCount;
@@ -202,7 +207,6 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
     "void main () {"
     "  color = (pos + vec3(1.0))/2.0;"
     "  gl_Position = model * vec4(pos, 1.0);"
-    "  gl_PointSize = 4.0;"
     "}";
   char *fragmentShader = "#version 410\n"
     "in vec3 color;"
@@ -274,7 +278,8 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
       }
     }
 
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    float gray = 0.0f;
+    glClearColor(gray, gray, gray, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     sphereYRot += 0.25f*PI*dt;
@@ -288,7 +293,7 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
     glUniformMatrix4fv(modelMatLocation, 1, GL_TRUE, m);
 
     //glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, NULL);
-    glDrawElements(GL_LINE_STRIP, indicesCount, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_LINES, indicesCount, GL_UNSIGNED_INT, NULL);
 
     SwapBuffers(hdc);
   }
