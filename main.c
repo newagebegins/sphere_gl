@@ -1,10 +1,3 @@
-/*
-  TODO:
-  - Single vertex on the pole
-  - Use matrices to implement camera
-  - Rotate camera with mouse
-*/
-
 #include <windows.h>
 #include <stdbool.h>
 #include <math.h>
@@ -82,7 +75,7 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
   wndClass.lpszClassName = "Sphere GL";
   RegisterClass(&wndClass);
 
-  int wndWidth = 800;
+  int wndWidth = 400;
   int wndHeight = wndWidth;
 
   RECT crect = {0};
@@ -146,12 +139,11 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
-  // Line antialiasing
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_LINE_SMOOTH);
   glHint(GL_LINE_SMOOTH_HINT,  GL_NICEST);
-  glLineWidth(10.0f);
+  glLineWidth(5.0f);
 
   int parallelsCount = 20;
   int meridiansCount = parallelsCount;
@@ -212,7 +204,7 @@ int CALLBACK WinMain(HINSTANCE inst, HINSTANCE prevInst, LPSTR cmdLine, int cmdS
     "in vec3 color;"
     "out vec4 frag_color;"
     "void main () {"
-    "  frag_color = vec4(color, 1.0);"
+    "  frag_color = vec4((color - 0.7*vec3(gl_FragCoord.z)), 1.0);"
     "}";
   GLuint vertShader, fragShader;
 
